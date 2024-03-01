@@ -39,12 +39,25 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'usuario',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    #meus app
+    'core',
+    'pessoal',
+    'previsao',
+    'servico',
+
+    #apps de terceiros, instalados via pip install
+    'widget_tweaks', # usada para renderizar os campos dos forms nos templates
+    'dbbackup',  # adicionando django-dbbackup
+    # 'sms', #usado para enviar sms, porém, não foi implementado pq não encontrei apps livre, só proprietário!
 ]
 
 MIDDLEWARE = [
@@ -92,6 +105,12 @@ DATABASES = {
     }
 }
 
+# AUTENTICAÇÃO
+LOGIN_URL = 'usuario:login'
+LOGIN_REDIRECT_URL = 'core:home'
+LOGOUT_REDIRECT_URL = 'core:home'
+LOGOUT_URL = 'usuario:logout'
+AUTH_USER_MODEL = 'usuario.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -123,6 +142,12 @@ USE_I18N = True
 
 USE_TZ = True
 
+DATE_INPUT_FORMATS = ['%d/%m/%Y']
+
+
+# Honor the 'X-Forwarded-Proto' header for request.is_secure()
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -132,6 +157,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = DATA_DIR / 'static'
 
 MEDIA_URL = '/media/'
+
 # /data/web/media
 MEDIA_ROOT = DATA_DIR / 'media'
 
@@ -139,3 +165,29 @@ MEDIA_ROOT = DATA_DIR / 'media'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#=============================================================#
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Funcionando perfeitamente
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'seuemail'
+EMAIL_HOST_PASSWORD ='S' # past the key or password app here
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'seuemail'
+
+"""
+try:
+    from escalasv1.local_settings import *
+except ImportError:
+    pass
+"""
+
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage' #o que salvar
+DBBACKUP_STORAGE_OPTIONS = {'location': 'backups/'} # onde salvar

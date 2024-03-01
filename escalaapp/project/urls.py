@@ -14,9 +14,31 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.urls import re_path, include, path
 from django.contrib import admin
-from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+
+# urlpatterns = [
+#     path('admin/', admin.site.urls),
+# ]
+
+
+admin.autodiscover()
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-]
+        re_path(r'^', include('core.urls', namespace='core')),
+        re_path(r'^usuario/', include('usuario.urls', namespace='usuario')),
+        re_path(r'^pessoal/', include('pessoal.urls', namespace='pessoal')),
+        re_path(r'^escala-servicos/', include('previsao.urls', namespace='previsao')),
+        re_path(r'^servicos-tirados/', include('servico.urls', namespace='servico')),
+#        re_path(r'^admin/', admin.site.urls),
+
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+
+if settings.DEBUG:
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT
+    )
